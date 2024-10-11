@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  oscar-service:
+    build: ./soa-lab2-oscar
+    container_name: oscar-service
+    networks:
+      - develop
+    ports:
+      - "8081:8081"
+    environment:
+      - MOVIE_SERVICE_URL=http://movie-service:8080/soa-lab2-movie-1.0-SNAPSHOT/api/v1
+  movie-service:
+    build: ./soa-lab2-movie
+    container_name: movie-service
+    depends_on:
+      - db
+    networks:
+      - develop
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+      - "9990:9990"
+  db:
+    image: postgres
+    container_name: soa-db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=soa-db
+    command: postgres -p 5432
+    volumes:
+      - ./soa-lab2-movie/deployment/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql
+    networks:
+      - develop
+    ports:
+      - "5432:5432"
+
+networks:
+  develop:
+
+volumes:
+  postgres_data:
+    driver: local
