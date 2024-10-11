@@ -345,7 +345,7 @@
                     <key-store name="applicationKS">
                         <credential-reference clear-text="password"/>
                         <implementation type="JKS"/>
-                        <file path="application.keystore" relative-to="jboss.server.config.dir"/>
+                        <file path="movie-service.jks" relative-to="jboss.server.config.dir"/>
                     </key-store>
                 </key-stores>
                 <key-managers>
