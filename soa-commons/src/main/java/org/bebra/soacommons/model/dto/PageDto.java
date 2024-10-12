@@ -6,9 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/**
- * @author max_pri
- */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

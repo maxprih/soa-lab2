@@ -15,9 +15,7 @@ import org.bebra.soalab2movie.repository.MovieRepository;
 import java.util.List;
 
 
-/**
- * @author max_pri
- */
+
 @ApplicationScoped
 public class MovieService {
     @Inject

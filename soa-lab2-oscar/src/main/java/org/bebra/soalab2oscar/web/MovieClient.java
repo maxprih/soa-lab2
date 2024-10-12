@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
-/**
- * @author max_pri
- */
+
 @FeignClient(value = "movieClient", url = "${app.movie-service.url}")
 public interface MovieClient {
     @GetMapping("/movie")

@@ -20,6 +20,13 @@ services:
     ports:
       - "8443:8443"
       - "9993:9993"
+  frontend:
+    build: ./soa-frontend
+    container_name: frontend
+    networks:
+      - develop
+    ports:
+      - "8081:80"
   db:
     image: postgres
     container_name: soa-db

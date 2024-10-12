@@ -13,9 +13,7 @@ import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 import java.time.LocalDate;
 
-/**
- * @author max_pri
- */
+
 @ToString
 @Getter
 @Setter
@@ -31,7 +29,7 @@ public class Movie {
     private String name;
 
     @NotNull
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "coordinates_id", referencedColumnName = "id")
     private Coordinates coordinates;
 
@@ -57,7 +55,7 @@ public class Movie {
     @JdbcType(PostgreSQLEnumJdbcType.class)
     private MovieGenre genre;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person screenwriter;
 }

@@ -12,9 +12,7 @@ import org.bebra.soalab2movie.service.MovieService;
 
 import java.util.List;
 
-/**
- * @author max_pri
- */
+
 @Path("/v1/movie")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

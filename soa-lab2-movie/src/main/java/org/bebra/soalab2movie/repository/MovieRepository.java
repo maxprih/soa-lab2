@@ -11,9 +11,7 @@ import org.bebra.soalab2movie.model.entity.Movie;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * @author max_pri
- */
+
 @Transactional
 @Stateless
 public class MovieRepository {

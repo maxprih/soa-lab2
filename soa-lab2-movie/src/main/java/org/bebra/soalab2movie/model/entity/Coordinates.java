@@ -7,9 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * @author max_pri
- */
+
 @ToString
 @Getter
 @Setter

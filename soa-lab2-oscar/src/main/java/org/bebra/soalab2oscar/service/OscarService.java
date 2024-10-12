@@ -10,9 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * @author max_pri
- */
+
 @Service
 @RequiredArgsConstructor
 public class OscarService {

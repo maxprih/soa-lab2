@@ -7,9 +7,7 @@ import org.bebra.soacommons.model.enums.MovieGenre;
 
 import java.time.LocalDate;
 
-/**
- * @author max_pri
- */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

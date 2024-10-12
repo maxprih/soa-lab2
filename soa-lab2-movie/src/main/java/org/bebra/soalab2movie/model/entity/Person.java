@@ -11,9 +11,7 @@ import lombok.ToString;
 
 import java.time.LocalDate;
 
-/**
- * @author max_pri
- */
+
 @ToString
 @Getter
 @Setter

@@ -5,9 +5,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-/**
- * @author max_pri
- */
+
 @Mapper(componentModel = "cdi")
 public interface MovieMapper {
     @Mapping(target = "id", ignore = true)
