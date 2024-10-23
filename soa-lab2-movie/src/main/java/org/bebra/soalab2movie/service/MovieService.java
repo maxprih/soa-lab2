@@ -62,7 +62,7 @@ public class MovieService {
 
     public PageDto<Movie> findAllByGenreLessThan(MovieGenre genre, int page, int size, List<String> sortList) {
         List<Movie> movies = movieRepository.findByGenreLessThan(genre, page, size, sortList);
-        long totalElements = movieRepository.countTotalMoviesGenreLessThen();
+        long totalElements = movieRepository.countTotalMoviesGenreLessThen(genre);
         return constructPage(movies, page, size, totalElements);
     }
 

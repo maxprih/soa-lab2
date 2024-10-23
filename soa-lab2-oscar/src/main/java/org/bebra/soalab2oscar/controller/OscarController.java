@@ -5,6 +5,7 @@ import org.bebra.soalab2oscar.service.OscarService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.bebra.soacommons.model.dto.PersonDto;
@@ -25,7 +26,7 @@ public class OscarController {
         return ResponseEntity.ok(oscarService.getLoosers());
     }
 
-    @GetMapping("/movies/reward-thriller")
+    @PostMapping("/movies/reward-thriller")
     public ResponseEntity<Void> rewardThriller() {
         oscarService.rewardThriller();
         return ResponseEntity.ok().build();

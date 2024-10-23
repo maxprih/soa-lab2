@@ -25,7 +25,22 @@ public class MovieController {
     public Response getMovies(
             @QueryParam("page") @DefaultValue("0") int page,
             @QueryParam("size") @DefaultValue("10") int size,
-            @QueryParam("sort") List<String> sort) {
+            @QueryParam("sort") List<String> sort,
+            @QueryParam("name") String nameValue,
+            @QueryParam("name-filter") String nameFilter,
+            @QueryParam("id") String idValue,
+            @QueryParam("id-filter") String idFilter,
+            @QueryParam("creationDate") String creationDateValue,
+            @QueryParam("creationDate-filter") String creationDateFilter,
+            @QueryParam("oscarsCount") String oscarsCountValue,
+            @QueryParam("oscarsCount-filter") String oscarsCountFilter,
+            @QueryParam("usaBoxOffice") String usaBoxOfficeValue,
+            @QueryParam("usaBoxOffice-filter") String usaBoxOfficeFilter,
+            @QueryParam("genre") String genreValue,
+            @QueryParam("genre-filter") String genreFilter,
+            @QueryParam("screenwriter.name") String screenwriterNameValue,
+            @QueryParam("screenwriter.name-filter") String screenwriterNameFilter
+            ) {
         PageDto<Movie> movies = movieService.findAll(page, size, sort);
         return Response.ok(movies).build();
     }

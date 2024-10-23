@@ -56,7 +56,7 @@ public class MovieRepository {
     public List<Movie> findByGenreLessThan(MovieGenre genre, int page, int size, List<String> sortParams) {
         String orderByClause = buildOrderByClause(sortParams);
 
-        String jpql = "SELECT m FROM Movie m WHERE m.genre < :genre" + orderByClause;
+        String jpql = "SELECT m FROM Movie m WHERE m.genre < :genre " + orderByClause;
 
         return entityManager.createQuery(jpql, Movie.class)
                 .setParameter("genre", genre)
@@ -65,9 +65,11 @@ public class MovieRepository {
                 .getResultList();
     }
 
-    public long countTotalMoviesGenreLessThen() {
+    public long countTotalMoviesGenreLessThen(MovieGenre genre) {
         String jpql = "SELECT COUNT(m) FROM Movie m WHERE m.genre < :genre";
-        return entityManager.createQuery(jpql, Long.class).getSingleResult();
+        return entityManager.createQuery(jpql, Long.class)
+                .setParameter("genre", genre)
+                .getSingleResult();
     }
 
     public void save(Movie movie) {
