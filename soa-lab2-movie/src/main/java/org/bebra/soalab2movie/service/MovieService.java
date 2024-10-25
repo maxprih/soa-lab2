@@ -11,7 +11,9 @@ import org.bebra.soalab2movie.exception.MovieNotFoundException;
 import org.bebra.soalab2movie.model.entity.Movie;
 import org.bebra.soalab2movie.model.mapper.MovieMapper;
 import org.bebra.soalab2movie.repository.MovieRepository;
+import org.bebra.soalab2movie.utils.FilterCriterion;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,11 +25,22 @@ public class MovieService {
     @Inject
     private MovieMapper mapper;
 
-    public PageDto<Movie> findAll(int page, int size, List<String> sortList) {
-        List<Movie> movies = movieRepository.findAll(page, size, sortList);
-        long totalElements = movieRepository.countTotalMovies();
-
-        return constructPage(movies, page, size, totalElements);
+    public PageDto<Movie> findAll(int page, int size, List<String> sortList,
+                                  String nameValue, String nameFilter,
+                                  String idValue, String idFilter,
+                                  String taglineValue, String taglineFilter,
+                                  String creationDateValue, String creationDateFilter,
+                                  String oscarsCountValue, String oscarsCountFilter,
+                                  String usaBoxOfficeValue, String usaBoxOfficeFilter,
+                                  String genreValue, String genreFilter,
+                                  String screenwriterNameValue, String screenwriterNameFilter,
+                                  String coordinatesXValue, String coordinatesXFilter,
+                                  String coordinatesYValue, String coordinatesYFilter) {
+        List<FilterCriterion> filters = createFilters(nameValue, nameFilter, idValue, idFilter, taglineValue, taglineFilter, creationDateValue, creationDateFilter, oscarsCountValue, oscarsCountFilter, usaBoxOfficeValue, usaBoxOfficeFilter, coordinatesXValue, coordinatesXFilter, coordinatesYValue, coordinatesYFilter, screenwriterNameValue, screenwriterNameFilter);
+        if (genreValue != null && genreFilter != null) {
+            filters.add(new FilterCriterion("genre", genreFilter, genreValue));
+        }
+        return movieRepository.findAll(page, size, sortList, filters);
     }
 
     public Movie findById(Integer id) {
@@ -60,19 +73,54 @@ public class MovieService {
         return movieRepository.countAllByTagline(tagline);
     }
 
-    public PageDto<Movie> findAllByGenreLessThan(MovieGenre genre, int page, int size, List<String> sortList) {
-        List<Movie> movies = movieRepository.findByGenreLessThan(genre, page, size, sortList);
-        long totalElements = movieRepository.countTotalMoviesGenreLessThen(genre);
-        return constructPage(movies, page, size, totalElements);
+    public PageDto<Movie> findAllByGenreLessThan(int page, int size, List<String> sortList,
+                                  String nameValue, String nameFilter,
+                                  String idValue, String idFilter,
+                                  String taglineValue, String taglineFilter,
+                                  String creationDateValue, String creationDateFilter,
+                                  String oscarsCountValue, String oscarsCountFilter,
+                                  String usaBoxOfficeValue, String usaBoxOfficeFilter,
+                                  String genreValue,
+                                  String screenwriterNameValue, String screenwriterNameFilter,
+                                  String coordinatesXValue, String coordinatesXFilter,
+                                  String coordinatesYValue, String coordinatesYFilter) {
+        List<FilterCriterion> filters = createFilters(nameValue, nameFilter, idValue, idFilter, taglineValue, taglineFilter, creationDateValue, creationDateFilter, oscarsCountValue, oscarsCountFilter, usaBoxOfficeValue, usaBoxOfficeFilter, coordinatesXValue, coordinatesXFilter, coordinatesYValue, coordinatesYFilter, screenwriterNameValue, screenwriterNameFilter);
+        if (genreValue != null) {
+            filters.add(new FilterCriterion("genre", "lt", genreValue));
+        }
+        return movieRepository.findAll(page, size, sortList, filters);
     }
 
-    public PageDto<Movie> constructPage(List<Movie> movies, int page, int size, long totalElements) {
-        int totalPages = (int) Math.ceil((double) totalElements / size);
-        return new PageDto<>(movies, new PageMetadata(size, page, totalElements, totalPages));
-    }
+    private List<FilterCriterion> createFilters(String nameValue, String nameFilter, String idValue, String idFilter, String taglineValue, String taglineFilter, String creationDateValue, String creationDateFilter, String oscarsCountValue, String oscarsCountFilter, String usaBoxOfficeValue, String usaBoxOfficeFilter, String coordinatesXValue, String coordinatesXFilter, String coordinatesYValue, String coordinatesYFilter, String screenwriterNameValue, String screenwriterNameFilter) {
+        List<FilterCriterion> filters = new ArrayList<>();
 
-    @Transactional
-    public void rewardGenre(MovieGenre movieGenre) {
-        movieRepository.rewardGenre(movieGenre);
+        if (nameValue != null && nameFilter != null) {
+            filters.add(new FilterCriterion("name", nameFilter, nameValue));
+        }
+        if (idValue != null && idFilter != null) {
+            filters.add(new FilterCriterion("id", idFilter, idValue));
+        }
+        if (taglineValue != null && taglineFilter != null) {
+            filters.add(new FilterCriterion("tagline", taglineFilter, taglineValue));
+        }
+        if (coordinatesXValue != null && coordinatesXFilter != null) {
+            filters.add(new FilterCriterion("coordinates.x", coordinatesXFilter, coordinatesXValue));
+        }
+        if (coordinatesYValue != null && coordinatesYFilter != null) {
+            filters.add(new FilterCriterion("coordinates.y", coordinatesYFilter, coordinatesYValue));
+        }
+        if (creationDateValue != null && creationDateFilter != null) {
+            filters.add(new FilterCriterion("creationDate", creationDateFilter, creationDateValue));
+        }
+        if (oscarsCountValue != null && oscarsCountFilter != null) {
+            filters.add(new FilterCriterion("oscarsCount", oscarsCountFilter, oscarsCountValue));
+        }
+        if (usaBoxOfficeValue != null && usaBoxOfficeFilter != null) {
+            filters.add(new FilterCriterion("usaBoxOffice", usaBoxOfficeFilter, usaBoxOfficeValue));
+        }
+        if (screenwriterNameValue != null && screenwriterNameFilter != null) {
+            filters.add(new FilterCriterion("screenwriter.name", screenwriterNameFilter, screenwriterNameValue));
+        }
+        return filters;
     }
 }

@@ -6,7 +6,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.bebra.soacommons.model.dto.PageDto;
-import org.bebra.soacommons.model.enums.MovieGenre;
 import org.bebra.soalab2movie.model.entity.Movie;
 import org.bebra.soalab2movie.service.MovieService;
 
@@ -30,6 +29,8 @@ public class MovieController {
             @QueryParam("name-filter") String nameFilter,
             @QueryParam("id") String idValue,
             @QueryParam("id-filter") String idFilter,
+            @QueryParam("tagline") String taglineValue,
+            @QueryParam("tagline-filter") String taglineFilter,
             @QueryParam("creationDate") String creationDateValue,
             @QueryParam("creationDate-filter") String creationDateFilter,
             @QueryParam("oscarsCount") String oscarsCountValue,
@@ -39,9 +40,22 @@ public class MovieController {
             @QueryParam("genre") String genreValue,
             @QueryParam("genre-filter") String genreFilter,
             @QueryParam("screenwriter.name") String screenwriterNameValue,
-            @QueryParam("screenwriter.name-filter") String screenwriterNameFilter
-            ) {
-        PageDto<Movie> movies = movieService.findAll(page, size, sort);
+            @QueryParam("screenwriter.name-filter") String screenwriterNameFilter,
+            @QueryParam("coordinates.x") String coordinatesXValue,
+            @QueryParam("coordinates.x-filter") String coordinatesXFilter,
+            @QueryParam("coordinates.y") String coordinatesYValue,
+            @QueryParam("coordinates.y-filter") String coordinatesYFilter) {
+        PageDto<Movie> movies = movieService.findAll(page, size, sort,
+                nameValue, nameFilter,
+                idValue, idFilter,
+                taglineValue, taglineFilter,
+                creationDateValue, creationDateFilter,
+                oscarsCountValue, oscarsCountFilter,
+                usaBoxOfficeValue, usaBoxOfficeFilter,
+                genreValue, genreFilter,
+                screenwriterNameValue, screenwriterNameFilter,
+                coordinatesXValue, coordinatesXFilter,
+                coordinatesYValue, coordinatesYFilter);
         return Response.ok(movies).build();
     }
 
@@ -88,11 +102,40 @@ public class MovieController {
 
     @GET
     @Path("/genre-less-then")
-    public Response findAllByGenreLessThan(@QueryParam("page") @DefaultValue("1") int page,
-                                           @QueryParam("size") @DefaultValue("10") int size,
-                                           @QueryParam("sort") List<String> sort,
-                                           @QueryParam("movieGenre") MovieGenre movieGenre) {
-        PageDto<Movie> movies = movieService.findAllByGenreLessThan(movieGenre, page, size, sort);
+    public Response findAllByGenreLessThan(
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("size") @DefaultValue("10") int size,
+            @QueryParam("sort") List<String> sort,
+            @QueryParam("name") String nameValue,
+            @QueryParam("name-filter") String nameFilter,
+            @QueryParam("id") String idValue,
+            @QueryParam("id-filter") String idFilter,
+            @QueryParam("tagline") String taglineValue,
+            @QueryParam("tagline-filter") String taglineFilter,
+            @QueryParam("creationDate") String creationDateValue,
+            @QueryParam("creationDate-filter") String creationDateFilter,
+            @QueryParam("oscarsCount") String oscarsCountValue,
+            @QueryParam("oscarsCount-filter") String oscarsCountFilter,
+            @QueryParam("usaBoxOffice") String usaBoxOfficeValue,
+            @QueryParam("usaBoxOffice-filter") String usaBoxOfficeFilter,
+            @QueryParam("genre") String genreValue,
+            @QueryParam("screenwriter.name") String screenwriterNameValue,
+            @QueryParam("screenwriter.name-filter") String screenwriterNameFilter,
+            @QueryParam("coordinates.x") String coordinatesXValue,
+            @QueryParam("coordinates.x-filter") String coordinatesXFilter,
+            @QueryParam("coordinates.y") String coordinatesYValue,
+            @QueryParam("coordinates.y-filter") String coordinatesYFilter) {
+        PageDto<Movie> movies = movieService.findAllByGenreLessThan(page, size, sort,
+                nameValue, nameFilter,
+                idValue, idFilter,
+                taglineValue, taglineFilter,
+                creationDateValue, creationDateFilter,
+                oscarsCountValue, oscarsCountFilter,
+                usaBoxOfficeValue, usaBoxOfficeFilter,
+                genreValue,
+                screenwriterNameValue, screenwriterNameFilter,
+                coordinatesXValue, coordinatesXFilter,
+                coordinatesYValue, coordinatesYFilter);
         return Response.ok(movies).build();
     }
 }

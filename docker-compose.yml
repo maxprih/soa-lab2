@@ -27,6 +27,9 @@ services:
       - develop
     ports:
       - "8081:80"
+    environment:
+      - VITE_MOVIE_URL=https://localhost:8443/soa-lab2-movie-1.0-SNAPSHOT/api/v1/movie
+      - VITE_OSCAR_URL=https://localhost:8444/api/v1/oscar
   db:
     image: postgres
     container_name: soa-db
