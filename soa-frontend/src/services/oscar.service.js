@@ -8,7 +8,7 @@ class OscarService {
   }
 
   rewardThriller() {
-    return axios.get(API_URL + '/movies/reward-thriller')
+    return axios.post(API_URL + '/movies/reward-thriller')
   }
 }
 export default new OscarService()

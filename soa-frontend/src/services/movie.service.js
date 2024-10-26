@@ -89,21 +89,6 @@ class MovieService {
     return axios.get(API_URL + '/genre-less-then', { params })
   }
 
-  // getGenreLess(rows, first, sortField, sortOrder, genre) {
-  //   const params = {
-  //     size: rows,
-  //     page: first / rows,
-  //     genre: genre,
-  //   }
-  //   if (sortOrder) {
-  //     params.sort = sortField
-  //       ? `${sortField},${sortOrder === 1 ? 'asc' : 'desc'}`
-  //       : ''
-  //   }
-
-  //   return axios.get(API_URL + '/genre-less-then', { params })
-  // }
-
   minBoxOffice() {
     return axios.get(API_URL + '/min-box-office')
   }

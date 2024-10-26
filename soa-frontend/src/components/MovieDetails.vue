@@ -7,17 +7,18 @@
           <div class="card-header d-flex justify-content-between align-items-center">
             <div class="w-25 d-flex justify-content-start">
               <Button type="button" label="Go Back" icon="pi pi-arrow-left" @click="goBack"
-                      class="p-button-outlined p-button-secondary"/>
+                class="p-button-outlined p-button-secondary" />
             </div>
             <h1 class="display-4 text-center m-0 flex-grow-1">
-              {{ movie.name }}
+              <span v-if="!editMode"> {{ movie.name }}</span>
+              <InputText size="small" v-else v-model="editedMovie.name" />
             </h1>
             <div class="w-25 d-flex justify-content-end">
               <Button type="button" :label="editMode ? 'Save' : 'Edit'"
-                      :icon="editMode ? 'pi pi-check' : 'pi pi-pencil'" @click="toggleEditMode"
-                      class="p-button-outlined p-button-primary me-2"/>
+                :icon="editMode ? 'pi pi-check' : 'pi pi-pencil'" @click="toggleEditMode"
+                class="p-button-outlined p-button-primary me-2" :disabled="!isFormValid" />
               <Button type="button" label="Delete" icon="pi pi-trash" @click="deleteMovie"
-                      class="p-button-outlined p-button-danger"/>
+                class="p-button-outlined p-button-danger" />
             </div>
           </div>
         </template>
@@ -26,18 +27,24 @@
             <h5 v-if="!editMode" class="display-7 text-center m-0 flex-grow-1">
               {{ movie.tagline }}
             </h5>
-            <InputText v-else v-model="editedMovie.tagline"/>
+            <InputText v-else v-model="editedMovie.tagline" />
           </div>
         </template>
       </Card>
 
       <div class="card-body">
+        <div v-if="validationErrors.length > 0" class="mb-3 text-center w-100 d-flex flex-row ">
+          <Message class="ms-3 text-center" v-for="error in validationErrors" :key="error.text" severity="error"
+            :text="error.text">
+            {{ error.text }}
+          </Message>
+        </div>
         <div class="row">
           <div class="col-md-6">
             <Card>
               <template #header>
                 <h2 class="mb-3 text-center">Movie Details</h2>
-                <Divider/>
+                <Divider />
               </template>
               <template #content>
                 <div>
@@ -56,19 +63,19 @@
                       <i class="bi bi-trophy"></i>
                       <strong>Oscars Count:</strong>
                       <span v-if="!editMode">{{ movie.oscarsCount }}</span>
-                      <InputNumber v-else v-model="editedMovie.oscarsCount"/>
+                      <InputNumber v-else v-model="editedMovie.oscarsCount" />
                     </li>
                     <li class="list-group-item">
                       <i class="bi bi-postcard"></i>
                       <strong>USA Box Office:</strong>
                       <span v-if="!editMode">{{ movie.usaBoxOffice }}</span>
-                      <InputNumber v-else v-model="editedMovie.usaBoxOffice"/>
+                      <InputNumber v-else v-model="editedMovie.usaBoxOffice" />
                     </li>
                     <li class="list-group-item">
                       <i class="bi bi-film"></i> <strong>Genre:</strong>
                       <span v-if="!editMode">{{ movie.genre }}</span>
-                      <Select v-else v-model="editedMovie.genre" :options="genres"
-                              optionLabel="name" optionValue="code" placeholder="Select a Genre"/>
+                      <Select v-else v-model="editedMovie.genre" :options="genres" optionLabel="name" optionValue="code"
+                        placeholder="Select a Genre" />
                     </li>
                   </ul>
                 </div>
@@ -79,10 +86,12 @@
             <Card>
               <template #header>
                 <h2 class="mb-3 text-center">
-                  Screenwriter {{ movie.screenwriter.name }}
+                  Screenwriter
+                  <span v-if="!editMode"> {{ movie.screenwriter.name }}</span>
+                  <InputText size="small" v-else v-model="editedMovie.screenwriter.name" />
                   <i class="bi bi-person"></i>
                 </h2>
-                <Divider/>
+                <Divider />
               </template>
               <template #content>
                 <div>
@@ -96,32 +105,29 @@
                       <i class="bi bi-cake"></i>
                       <strong>Birthday:</strong>
                       <span v-if="!editMode">{{
-                          formatDate(movie.screenwriter.birthday)
+                        formatDate(movie.screenwriter.birthday)
                         }}</span>
-                      <DatePicker v-else v-model="editedMovie.screenwriter.birthday"
-                                  dateFormat="yy-mm-dd"/>
+                      <DatePicker v-else v-model="editedMovie.screenwriter.birthday" dateFormat="yy-mm-dd" />
                     </li>
                     <li class="list-group-item">
                       <i class="bi bi-person-raised-hand"></i>
                       <strong>Height:</strong>
                       <span v-if="!editMode">{{ movie.screenwriter.height }} CM</span>
-                      <InputNumber v-else v-model="editedMovie.screenwriter.height"
-                                   suffix=" CM"/>
+                      <InputNumber v-else v-model="editedMovie.screenwriter.height" suffix=" CM" />
                     </li>
                     <li class="list-group-item">
                       <i class="bi bi-person-bounding-box"></i>
                       <strong>Weight:</strong>
                       <span v-if="!editMode">{{ movie.screenwriter.weight }} KG</span>
-                      <InputNumber v-else v-model="editedMovie.screenwriter.weight"
-                                   suffix=" KG"/>
+                      <InputNumber v-else v-model="editedMovie.screenwriter.weight" suffix=" KG" />
                     </li>
                     <li class="list-group-item">
                       <i class="bi bi-passport"></i>
                       <strong>Passport ID:</strong>
                       <span v-if="!editMode">{{
-                          movie.screenwriter.passportId
+                        movie.screenwriter.passportId
                         }}</span>
-                      <InputText v-else v-model="editedMovie.screenwriter.passportId"/>
+                      <InputText v-else v-model="editedMovie.screenwriter.passportId" />
                     </li>
                   </ul>
                 </div>
@@ -137,31 +143,31 @@
               <strong>Y:</strong> {{ movie.coordinates.y }}
             </p>
             <div v-else class="d-flex justify-content-center">
-              <InputNumber v-model="editedMovie.coordinates.x" placeholder="X" class="me-2"/>
-              <InputNumber v-model="editedMovie.coordinates.y" placeholder="Y"/>
+              <InputNumber v-model="editedMovie.coordinates.x" placeholder="X" class="me-2" />
+              <InputNumber v-model="editedMovie.coordinates.y" placeholder="Y" />
             </div>
           </div>
         </div>
         <div class="row mt-4">
           <div class="col-12">
-            <Chart type="scatter" :data="chartData" :options="chartOptions" style="height: 400px"/>
+            <Chart type="scatter" :data="chartData" :options="chartOptions" style="height: 400px" />
           </div>
         </div>
       </div>
     </div>
     <div v-else class="loading-container">
-      <ProgressSpinner/>
+      <ProgressSpinner />
       <p>Loading movie details...</p>
     </div>
   </div>
 </template>
 
 <script>
-import {ref, computed, onMounted} from 'vue'
-import {useRoute, useRouter} from 'vue-router'
-import {isEqual} from 'lodash'
-import {useToast} from 'primevue/usetoast'
-import {useConfirm} from 'primevue/useconfirm'
+import { ref, computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { isEqual } from 'lodash'
+import { useToast } from 'primevue/usetoast'
+import { useConfirm } from 'primevue/useconfirm'
 import ConfirmDialog from 'primevue/confirmdialog'
 import ProgressSpinner from 'primevue/progressspinner'
 import Chart from 'primevue/chart'
@@ -172,6 +178,7 @@ import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
 import DatePicker from 'primevue/datepicker'
 import Select from 'primevue/select'
+import Message from 'primevue/message'
 import MovieService from '../services/movie.service'
 
 export default {
@@ -186,6 +193,7 @@ export default {
     InputNumber,
     DatePicker,
     Select,
+    Message,
     ConfirmDialog,
   },
   setup() {
@@ -199,11 +207,15 @@ export default {
     const confirm = useConfirm()
 
     const showInfo = () => {
-      toast.add({severity: 'info', summary: 'Movie not changed', life: 3000})
+      toast.add({ severity: 'info', summary: 'Movie not changed', life: 3000 })
+    }
+
+    const showUpdated = () => {
+      toast.add({ severity: 'success', summary: 'Movie was updated', life: 3000 })
     }
 
     const showDeleted = () => {
-      toast.add({severity: 'success', summary: 'Movie deleted', life: 3000})
+      toast.add({ severity: 'success', summary: 'Movie deleted', life: 3000 })
     }
 
     const deleteMovie = () => {
@@ -225,7 +237,7 @@ export default {
           try {
             await MovieService.delete(movie.value.id)
             showDeleted()
-            router.push({name: 'movie-list'})
+            router.push({ name: 'movie-list' })
           } catch (error) {
             console.error('Error deleting movie:', error)
           }
@@ -242,11 +254,11 @@ export default {
     }
 
     const genres = [
-      {name: 'Western', code: 'WESTERN'},
-      {name: 'Tragedy', code: 'TRAGEDY'},
-      {name: 'Drama', code: 'DRAMA'},
-      {name: 'Thriller', code: 'THRILLER'},
-      {name: 'Fantasy', code: 'FANTASY'},
+      { name: 'Western', code: 'WESTERN' },
+      { name: 'Tragedy', code: 'TRAGEDY' },
+      { name: 'Drama', code: 'DRAMA' },
+      { name: 'Thriller', code: 'THRILLER' },
+      { name: 'Fantasy', code: 'FANTASY' },
     ]
 
     const goBack = () => {
@@ -362,10 +374,10 @@ export default {
           try {
             if (isFormValid.value) {
               await MovieService.update(movie.value.id, editedMovie.value)
-              movie.value = {...editedMovie.value}
+              movie.value = { ...editedMovie.value }
               editMode.value = false
+              showUpdated();
             }
-
           } catch (error) {
             console.error('Error updating movie:', error)
 
@@ -375,7 +387,7 @@ export default {
           showInfo()
         }
       } else {
-        editedMovie.value = JSON.parse(JSON.stringify(movie.value)) // Deep copy
+        editedMovie.value = JSON.parse(JSON.stringify(movie.value))
         editMode.value = true
       }
     }
@@ -388,45 +400,45 @@ export default {
       const errors = [];
 
       if (!editedMovie.value.name || editedMovie.value.name.trim() === '') {
-        errors.push({text: 'Movie name cannot be empty'});
+        errors.push({ text: 'Movie name cannot be empty' });
       }
       if (editedMovie.value.oscarsCount <= 0) {
-        errors.push({text: 'Oscars count must be greater than 0'});
+        errors.push({ text: 'Oscars count must be greater than 0' });
       }
       if (!editedMovie.value.usaBoxOffice || editedMovie.value.usaBoxOffice <= 0) {
-        errors.push({text: 'USA Box Office must be greater than 0'});
+        errors.push({ text: 'USA Box Office must be greater than 0' });
       }
       if (!editedMovie.value.tagline) {
-        errors.push({text: 'Tagline cannot be empty'});
+        errors.push({ text: 'Tagline cannot be empty' });
       }
       if (!editedMovie.value.genre) {
-        errors.push({text: 'Genre must be selected'});
+        errors.push({ text: 'Genre must be selected' });
       }
 
       if (editedMovie.value.coordinates.x > 178) {
-        errors.push({text: 'X coordinate must not exceed 178'});
+        errors.push({ text: 'X coordinate must not exceed 178' });
       }
       if (editedMovie.value.coordinates.y > 842) {
-        errors.push({text: 'Y coordinate must not exceed 842'});
+        errors.push({ text: 'Y coordinate must not exceed 842' });
       }
 
       if (!editedMovie.value.screenwriter.name || editedMovie.value.screenwriter.name.trim() === '') {
-        errors.push({text: 'Screenwriter name cannot be empty'});
+        errors.push({ text: 'Screenwriter name cannot be empty' });
       }
       if (!editedMovie.value.screenwriter.birthday) {
-        errors.push({text: 'Screenwriter birthday must be provided'});
+        errors.push({ text: 'Screenwriter birthday must be provided' });
       }
       if (!editedMovie.value.screenwriter.height || editedMovie.value.screenwriter.height <= 0) {
-        errors.push({text: 'Screenwriter height must be greater than 0'});
+        errors.push({ text: 'Screenwriter height must be greater than 0' });
       }
       if (editedMovie.value.screenwriter.weight <= 0) {
-        errors.push({text: 'Screenwriter weight must be greater than 0'});
+        errors.push({ text: 'Screenwriter weight must be greater than 0' });
       }
       if (!editedMovie.value.screenwriter.passportId) {
-        errors.push({text: 'Passport ID cannot be empty'});
+        errors.push({ text: 'Passport ID cannot be empty' });
       }
       if (editedMovie.value.screenwriter.passportId && editedMovie.value.screenwriter.passportId.length > 20) {
-        errors.push({text: 'Passport ID must not exceed 20 characters'});
+        errors.push({ text: 'Passport ID must not exceed 20 characters' });
       }
 
 

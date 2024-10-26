@@ -30,6 +30,8 @@ import java.util.stream.Collectors;
 @Stateless
 public class MovieRepository {
 
+    private final List<String> allowedSortingFields = List.of("name", "coordinates.x", "coordinates.y", "id", "tagline", "creationDate", "oscarsCount", "usaBoxOffice", "genre", "screenwriter.name");
+
     @PersistenceContext(unitName = "MovieSource")
     private EntityManager entityManager;
 
@@ -174,7 +176,7 @@ public class MovieRepository {
         if (sortParams != null) {
             for (String sortParam : sortParams) {
                 String[] parts = sortParam.split(",");
-                if (parts.length != 2) {
+                if (parts.length != 2 || !(parts[1].equals("asc") || parts[1].equals("desc")) || !allowedSortingFields.contains(parts[0])) {
                     throw new SortingFormatException();
                 }
 
